@@ -1,0 +1,32 @@
+/**
+ * @file SplitPane
+ * @author ludafa<ludafa@outlook.com>
+ */
+
+@require 'melon/css/base.styl'
+
+.{$-melon-class-prefix}-split-pane
+    display: flex
+    justify-content: space-between
+    align-items: stretch
+
+    &.variant-horizontal
+
+        flex-direction: row
+        flex-wrap: nowrap
+
+        >.{$-melon-class-prefix}-spliter
+            cursor: col-resize
+
+    &.variant-vertical
+        flex-direction: column
+
+        .{$-melon-class-prefix}-spliter
+            cursor: row-resize
+
+
+    &.state-resizing
+        user-select: none
+
+@require './Pane.styl'
+@require './Spliter.styl'
