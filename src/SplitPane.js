@@ -18,18 +18,41 @@ const cx = create('SplitPane');
  */
 class SplitPane extends Component {
 
-    constructor(props, context) {
+    /**
+     * 构建函数
+     *
+     * @public
+     * @param {*} props 属性
+     */
+    constructor(props) {
 
-        super(props, context);
+        super(props);
 
         this.onResizeStart = this.onResizeStart.bind(this);
         this.onResizeEnd = this.onResizeEnd.bind(this);
         this.onResize = this.onResize.bind(this);
 
+        /**
+         * 状态
+         *
+         * @private
+         * @type {Object}
+         */
         this.state = {
             resizing: false,
             children: this.getChildren(props)
         };
+
+        /**
+         * 窗口容器
+         *
+         * 用于存放在拖拽过程中的数据
+         * 不放在 state 中的原因是这样可以提高性能
+         *
+         * @private
+         * @type {Array.Object}
+         */
+        this.panes = null;
 
     }
 

@@ -11,8 +11,19 @@ import {capitalize} from './util.js';
 
 const cx = create('Pane');
 
+/**
+ * 窗口容器
+ *
+ * @extends React.Component
+ */
 export default class Pane extends Component {
 
+    /**
+     * 渲染
+     *
+     * @public
+     * @return {React.Element}
+     */
     render() {
 
         const {

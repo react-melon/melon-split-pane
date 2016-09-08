@@ -9,14 +9,44 @@ import {create} from 'melon-core/classname/cxBuilder';
 
 const cx = create('Spliter');
 
+/**
+ * 分隔组件
+ *
+ * @extends React.Component
+ */
 export default class Spliter extends Component {
 
+    /**
+     * 构建函数
+     *
+     * @public
+     * @param {...*} args 参数
+     */
     constructor(...args) {
+
         super(...args);
+
         this.onMouseDown = this.onMouseDown.bind(this);
         this.onMouseMove = this.onMouseMove.bind(this);
         this.onMouseUp = this.onMouseUp.bind(this);
+
+        /**
+         * 状态
+         * @type {Object}
+         */
         this.state = {};
+
+        /**
+         * 在拖拽开始时的屏幕横坐标
+         * @type {number}
+         */
+        this.x = null;
+
+        /**
+         * 在拖拽开始时的屏幕纵坐标
+         * @type {number}
+         */
+        this.y = null;
     }
 
     /**
@@ -96,6 +126,12 @@ export default class Spliter extends Component {
 
     }
 
+    /**
+     * 渲染
+     *
+     * @public
+     * @return {React.Element}
+     */
     render() {
 
         const {
