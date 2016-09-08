@@ -18,3 +18,14 @@ export function limitInRange(target, min, max) {
         : (target < min ? min : target);
 
 }
+
+
+/**
+ * Converts the first character of string to upper case and the remaining to lower case.
+ *
+ * @param  {string} str str
+ * @return {string}
+ */
+export function capitalize(str = '') {
+    return `${str.charAt(0).toUpperCase()}${str.slice(1).toLowerCase()}`;
+}

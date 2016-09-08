@@ -7,6 +7,8 @@ import React, {Component, PropTypes} from 'react';
 
 import {create} from 'melon-core/classname/cxBuilder';
 
+import {capitalize} from './util.js';
+
 const cx = create('Pane');
 
 export default class Pane extends Component {
@@ -15,22 +17,27 @@ export default class Pane extends Component {
 
         const {
             children,
-            maxWidth,
-            minWidth,
+            max,
+            min,
             basis,
             grow,
-            shrink
+            shrink,
+            direction,
+            style
         } = this.props;
+
+        const limitPropName = capitalize(direction === 'horizontal' ? 'width' : 'height');
 
         return (
             <div
                 className={cx(this.props).build()}
                 style={{
+                    ...style,
                     flexBasis: basis,
                     flexGrow: grow,
                     flexShrink: shrink,
-                    maxWidth,
-                    minWidth
+                    [`min${limitPropName}`]: min,
+                    [`max${limitPropName}`]: max
                 }}>
                 {children}
             </div>

@@ -9,21 +9,13 @@
     display: flex
     justify-content: space-between
     align-items: stretch
+    flex-wrap: nowrap
 
     &.variant-horizontal
-
         flex-direction: row
-        flex-wrap: nowrap
-
-        >.{$-melon-class-prefix}-spliter
-            cursor: col-resize
 
     &.variant-vertical
         flex-direction: column
-
-        .{$-melon-class-prefix}-spliter
-            cursor: row-resize
-
 
     &.state-resizing
         user-select: none

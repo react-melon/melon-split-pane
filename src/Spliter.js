@@ -61,9 +61,13 @@ export default class Spliter extends Component {
             clientY
         } = e;
 
-        this.props.onResize({
-            width: clientX - this.x,
-            height: clientY - this.y
+        const {
+            onResize,
+            direction
+        } = this.props;
+
+        onResize({
+            delta: direction === 'horizontal' ? clientX - this.x : clientY - this.y
         });
 
     }
@@ -76,37 +80,42 @@ export default class Spliter extends Component {
      */
     onMouseUp(e) {
 
-        const {
-            clientX,
-            clientY
-        } = e;
-
-        this.props.onResize({
-            width: clientX - this.x,
-            height: clientY - this.y
-        });
-
+        this.onMouseMove(e);
 
         this.x = this.y = 0;
 
         window.removeEventListener('mousemove', this.onMouseMove);
         window.removeEventListener('mouseup', this.onMouseUp);
 
-        this.props.onResizeEnd();
-
-        this.setState({
-            resizing: false
-        });
+        this.setState(
+            {
+                resizing: false
+            },
+            this.props.onResizeEnd
+        );
 
     }
 
     render() {
 
+        const {
+            direction,
+            children,
+            ...rest
+        } = this.props;
+
+        const className = cx(this.props)
+            .addStates({resizing: this.state.resizing})
+            .addVariants(direction)
+            .build();
+
         return (
             <div
-                ref="main"
-                className={cx(this.props).addStates({resizing: this.state.resizing}).build()}
-                onMouseDown={this.onMouseDown} />
+                {...rest}
+                className={className}
+                onMouseDown={this.onMouseDown}>
+                {children}
+            </div>
         );
     }
 

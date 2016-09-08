@@ -3,7 +3,7 @@
  * @author ludafa<ludafa@outlook.com>
  */
 
-import React, {PropTypes, Component, Children} from 'react';
+import React, {PropTypes, Component, Children, cloneElement} from 'react';
 import {findDOMNode} from 'react-dom';
 
 import {create} from 'melon-core/classname/cxBuilder';
@@ -22,19 +22,15 @@ class SplitPane extends Component {
 
         super(props, context);
 
-        this.onStartResize = this.onStartResize.bind(this);
-        this.onEndResize = this.onEndResize.bind(this);
+        this.onResizeStart = this.onResizeStart.bind(this);
+        this.onResizeEnd = this.onResizeEnd.bind(this);
         this.onResize = this.onResize.bind(this);
 
-    }
+        this.state = {
+            resizing: false,
+            children: this.getChildren(props)
+        };
 
-    /**
-     * 当组件被挂载时的处理
-     *
-     * @public
-     */
-    componentWillMount() {
-        this.children = this.getChildren(this.props);
     }
 
     /**
@@ -44,9 +40,27 @@ class SplitPane extends Component {
      * @param {Object} nextProps 新属性
      */
     componentWillReceiveProps(nextProps) {
-        if (this.props.children !== nextProps.children) {
-            this.children = this.getChildren(nextProps);
+
+        // we do not repaint children while resizing
+        if (this.props.children !== nextProps.children && !this.state.resizing) {
+            this.setState({
+                children: this.getChildren(nextProps)
+            });
         }
+
+    }
+
+    /**
+     * 是否需要更新
+     *
+     * 我们在 resize 的过程中不会进行 react 的更新
+     *
+     * @param {*} nextProps 下一个属性
+     * @param {*} nextState 下一个状态
+     * @return {boolean}
+     */
+    shouldComponentUpdate(nextProps, nextState) {
+        return !(this.state.resizing === nextState.resizing && nextState.resizing);
     }
 
     /**
@@ -55,7 +69,7 @@ class SplitPane extends Component {
      * @public
      */
     componentWillUnmount() {
-        this.children = null;
+        this.panes = null;
     }
 
     /**
@@ -65,20 +79,24 @@ class SplitPane extends Component {
      * @return {Array.Object}
      */
     getChildren(props) {
+
+        const direction = props.direction;
+
         return Children
-            .toArray(this.props.children)
-            .filter(child => child.type === Pane || child.type === Spliter)
+            .toArray(props.children)
+            .filter(child => child.type === Pane)
             .reduce((children, child, index, arr) => {
 
-                children.push(child);
+                children.push(cloneElement(child, {direction}));
 
-                if (child.type === Pane && index < arr.length - 1 && arr[index + 1].type !== Spliter) {
+                if (index < arr.length - 1) {
                     children.push((
                         <Spliter
                             key={`spliter-${index}`}
-                            onResizeStart={this.onStartResize}
-                            onResize={({width, height}) => this.onResize(index, width, height)}
-                            onResizeEnd={this.onEndResize} />
+                            direction={direction}
+                            onResizeStart={this.onResizeStart}
+                            onResize={({delta}) => this.onResize(index, delta)}
+                            onResizeEnd={this.onResizeEnd} />
                     ));
                 }
 
@@ -93,26 +111,26 @@ class SplitPane extends Component {
      *
      * @private
      */
-    onStartResize() {
+    onResizeStart() {
 
         const main = findDOMNode(this);
 
-        main.classList.add(SplitPane.RESIZING_CLASS_NAME);
+        this.setState({
+            resizing: true
+        });
 
-        const nodes = Array.from(main.childNodes);
+        const panes = Array.from(main.childNodes);
 
-        this.nodes = this.children
+        this.panes = this.state.children
             .filter(child => child.type === Pane)
             .map((child, index) => {
 
                 const {
-                    minWidth = 0,
-                    maxWidth = Number.MAX_VALUE,
-                    minHeight = 0,
-                    maxHeight = Number.MAX_VALUE
+                    min = 0,
+                    max = Number.MAX_VALUE
                 } = child.props;
 
-                const node = nodes[index * 2];
+                const node = panes[index * 2];
 
                 const {
                     width,
@@ -122,15 +140,18 @@ class SplitPane extends Component {
                 return {
                     width,
                     height,
-                    minWidth,
-                    maxWidth,
-                    minHeight,
-                    maxHeight,
+                    max,
+                    min,
                     node
                 };
 
             });
 
+        const onResizeStart = this.props.onResizeStart;
+
+        if (onResizeStart) {
+            onResizeStart();
+        }
 
     }
 
@@ -139,48 +160,103 @@ class SplitPane extends Component {
      *
      * @private
      * @param {number} index  当前的 spliter 序号
-     * @param {number} width  水平方向的拖动位移
-     * @param {number} height 垂直方向的拖动位移
+     * @param {number} delta  拖动位移
      */
-    onResize(index, width, height) {
+    onResize(index, delta) {
 
-        const a = this.nodes[index];
-        const b = this.nodes[index + 1];
+        const {
+            direction,
+            onResize
+        } = this.props;
 
-        const direction = this.props.direction;
+        const propName = direction === 'horizontal' ? 'width' : 'height';
 
-        if (direction === 'horizontal') {
-            this.update('width', width, a, b);
+        let panes = this.panes;
+
+        const a = panes[index];
+        const b = panes[index + 1];
+        const aSize = a[propName];
+        const bSize = b[propName];
+        const total = aSize + bSize;
+        const min = Math.max(a.min, total - b.max);
+        const max = Math.min(a.max, total - b.min);
+        const aNextSize = limitInRange(aSize + delta, min, max);
+        const bNextSize = total - aNextSize;
+
+        const nextSizes = panes.map((pane, i) => {
+
+            if (pane === a) {
+                return aNextSize;
+            }
+
+            if (pane === b) {
+                return bNextSize;
+            }
+
+            return pane[propName];
+
+        });
+
+        const nextGrow = this.getGrow(nextSizes);
+
+        const isChanged = nextGrow.some((grow, index) => panes[index].grow !== grow);
+
+        if (!isChanged) {
+            return;
         }
 
-        if (direction === 'vertical') {
-            this.update('height', height, a, b);
+        panes = this.panes = panes.map((pane, i) => {
+
+            const {
+                node,
+                ...rest
+            } = pane;
+
+            const basis = 0;
+            const shrink = 0;
+            const grow = nextGrow[i];
+
+            node.style.flexBasis = basis;
+            node.style.flexShrink = shrink;
+            node.style.flexGrow = grow;
+
+            return {
+                ...rest,
+                node,
+                basis,
+                shrink,
+                grow
+            };
+
+        });
+
+        if (onResize) {
+            onResize(panes.map(pane => {
+                return {
+                    grow: pane.grow,
+                    basis: 0,
+                    shrink: 0
+                };
+            }));
         }
 
     }
 
     /**
-     * 更新 pane 的大小
+     * get grow factor for columns
      *
-     * @private
-     * @param {string} prop  属性名
-     * @param {number} value 值
-     * @param {Object} a     左框体
-     * @param {Object} b     右框体
+     * @param {Array.number} columnLengths array of comlumn length
+     * @return {Array.number}
      */
-    update(prop, value, a, b) {
+    getGrow(columnLengths) {
 
-        const total = a[prop] + b[prop];
-        const maxPropName = `max${prop.charAt(0).toUpperCase()}${prop.slice(1)}`;
-        const minPropName = `min${prop.charAt(0).toUpperCase()}${prop.slice(1)}`;
+        const sum = columnLengths.reduce((sum, length) => sum + length, 0);
 
-        const min = Math.max(a[minPropName], total - b[maxPropName]);
-        const max = Math.min(a[maxPropName], total - b[minPropName]);
+        const factors = columnLengths.map(length => length / sum);
 
-        const current = limitInRange(a[prop] + value, min, max);
+        const min = Math.min(...factors);
 
-        a.node.style[minPropName] = a.node.style[maxPropName] = current + 'px';
-        b.node.style[minPropName] = b.node.style[maxPropName] = (total - current) + 'px';
+        return factors.map(factor => factor / min);
 
     }
 
@@ -189,11 +265,55 @@ class SplitPane extends Component {
      *
      * @private
      */
-    onEndResize() {
-        this.nodes = null;
-        findDOMNode(this).classList.remove(SplitPane.RESIZING_CLASS_NAME);
-    }
+    onResizeEnd() {
 
+        const onResizeEnd = this.props.onResizeEnd;
+
+        let panes = this.panes;
+
+        const rects = panes.map(pane => {
+
+            const {
+                basis,
+                grow,
+                shrink
+            } = pane;
+
+            return {
+                grow,
+                shrink,
+                basis
+            };
+
+        });
+
+        let children = this.state.children;
+        let nextChildren = [];
+
+        for (let i = 0, j = 0, len = children.length; i < len; i++) {
+
+            let child = children[i];
+
+            if (child.type === Pane) {
+                child = cloneElement(child, rects[j++]);
+            }
+
+            nextChildren.push(child);
+
+        }
+
+        this.setState({
+            resizing: false,
+            children: nextChildren
+        });
+
+        if (onResizeEnd) {
+            onResizeEnd({rects});
+        }
+
+        this.panes = null;
+
+    }
 
     /**
      * 渲染
@@ -203,27 +323,31 @@ class SplitPane extends Component {
      */
     render() {
 
-        let {
+        const {
             direction,
             ...rest
         } = this.props;
 
+        const {
+            resizing,
+            children
+        } = this.state;
+
         const className = cx(this.props)
             .addVariants(direction)
+            .addStates({
+                resizing
+            })
             .build();
 
         return (
-            <div
-                {...rest}
-                className={className}>
-                {this.children}
+            <div {...rest} className={className}>
+                {children}
             </div>
         );
     }
 
 }
-
-SplitPane.RESIZING_CLASS_NAME = 'state-resizing';
 
 SplitPane.displayName = 'SplitPane';
 
@@ -232,6 +356,7 @@ SplitPane.defaultProps = {
 };
 
 SplitPane.propTypes = {
+    onResizeRestart: PropTypes.func,
     onResize: PropTypes.func,
     onResizeEnd: PropTypes.func,
     direction: PropTypes.oneOf(['horizontal', 'vertical']).isRequired
