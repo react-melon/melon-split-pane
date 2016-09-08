@@ -59,4 +59,4 @@ open http://localhost:8080/example
 
 ## Thanks
 
-Big thanks to [BrowserStack](https://www.browserstack.com) for automatic multiple browsers test support!
+Big thanks to [BrowserStack](https://www.browserstack.com) for multiple-browsers automation testing!
