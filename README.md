@@ -7,13 +7,17 @@
 
 ```js
 import React from 'react';
-import SplitPane from 'melon-split-pane';
+import SplitPane, {Pane} from 'melon-split-pane';
 import ReactDOM from 'react-dom';
 
 import './index.styl';
 
 ReactDOM.render(
-    <SplitPane />,
+    <SplitPane direction="horizontal">
+        <Pane basis={100} grow={1} shrink={0} min={200} max={500}>a</Pane>
+        <Pane>b</Pane>
+        <Pane>c</Pane>
+    </SplitPane>,
     document.getElementById('app')
 );
 ```
