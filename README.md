@@ -56,3 +56,11 @@ npm install
 npm start
 open http://localhost:8080/example
 ```
+
+## Thanks
+
+Big thanks to [BrowserStack](https://www.browserstack.com) for automatic multiple browsers test support!
+
+<a href="https://www.browserstack.com" target="_blank">
+    <img src="https://d2ogrdw2mh0rsl.cloudfront.net/production/images/static/header/header-logo.svg?1473272095" style="height: 43px;" alt="BrowserStack"/>
+</a>
