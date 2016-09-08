@@ -61,6 +61,6 @@ open http://localhost:8080/example
 
 Big thanks to [BrowserStack](https://www.browserstack.com) for automatic multiple browsers test support!
 
-<a href="https://www.browserstack.com" target="_blank">
+<a href="https://www.browserstack.com" target="_blank" style="display: block;background-color: #142433; height: 50px; line-height: 50px; text-align: center">
     <img src="https://d2ogrdw2mh0rsl.cloudfront.net/production/images/static/header/header-logo.svg?1473272095" style="height: 43px;" alt="BrowserStack"/>
 </a>
