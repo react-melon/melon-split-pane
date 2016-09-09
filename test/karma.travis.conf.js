@@ -12,6 +12,12 @@ module.exports = function (config) {
             {},
             karmaConfig,
             {
+
+                browserStack: {
+                    username: 'leonlu2',
+                    accessKey: 'ps6dvCJdxhJGWWSTrWM4'
+                },
+
                 /* eslint-disable fecs-camelcase */
                 // define browsers
                 customLaunchers: {
