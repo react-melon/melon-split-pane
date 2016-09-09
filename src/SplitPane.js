@@ -142,7 +142,7 @@ class SplitPane extends Component {
             resizing: true
         });
 
-        const panes = Array.from(main.childNodes);
+        const panes = [].slice.call(main.childNodes);
 
         this.panes = this.state.children
             .filter(child => child.type === Pane)
