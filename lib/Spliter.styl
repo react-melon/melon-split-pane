@@ -1,0 +1,18 @@
+/**
+ * @file Pane
+ * @author ludafa<ludafa@outlook.com>
+ */
+
+@require 'melon/css/base.styl'
+
+.{$-melon-class-prefix}-spliter
+    flex: 0 0 5px
+    overflow: hidden
+    font-size: 0
+    background-color: #ddd
+
+    &.variant-horizontal
+        cursor: col-resize
+
+    &.variant-vertical
+        cursor: row-resize

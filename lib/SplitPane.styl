@@ -6,4 +6,19 @@
 @require 'melon/css/base.styl'
 
 .{$-melon-class-prefix}-split-pane
-    content: 'a'
+    display: flex
+    justify-content: space-between
+    align-items: stretch
+    flex-wrap: nowrap
+
+    &.variant-horizontal
+        flex-direction: row
+
+    &.variant-vertical
+        flex-direction: column
+
+    &.state-resizing
+        user-select: none
+
+@require './Pane.styl'
+@require './Spliter.styl'
