@@ -12,12 +12,22 @@ module.exports = function (config) {
             {},
             karmaConfig,
             {
-                browsers: ['PhantomJS'],
-                phantomjsLauncher: {
-                    // Have phantomjs exit if a ResourceError is encountered
-                    // (useful if karma exits without killing phantom)
-                    exitOnResourceError: true
-                }
+                /* eslint-disable fecs-camelcase */
+                // define browsers
+                customLaunchers: {
+                    bs_chrome_mac: {
+                        base: 'BrowserStack',
+                        browser: 'chrome',
+                        browser_version: '52.0',
+                        os: 'OS X',
+                        os_version: 'El Capitan'
+                    }
+                },
+                /* eslint-enable fecs-camelcase */
+
+                browsers: [
+                    'bs_chrome_mac'
+                ]
             }
         )
     );
