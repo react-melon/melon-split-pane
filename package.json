@@ -63,7 +63,6 @@
     "karma-coverage": "^1.1.1",
     "karma-firefox-launcher": "^1.0.0",
     "karma-jasmine": "^1.0.2",
-    "karma-sauce-launcher": "^1.0.0",
     "nib": "^1.1.2",
     "react-addons-test-utils": "^0.14.8",
     "style-loader": "^0.13.1",

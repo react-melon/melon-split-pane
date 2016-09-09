@@ -61,5 +61,4 @@ open http://localhost:8080/example
 
 Big thanks to [BrowserStack](https://www.browserstack.com) for multiple-browsers automation testing!
 
-![logo](https://cloud.githubusercontent.com/assets/811195/18348391/b524c38e-75fd-11e6-8a65-b175cf4ad91e.png)
-
+[![logo](https://cloud.githubusercontent.com/assets/811195/18348391/b524c38e-75fd-11e6-8a65-b175cf4ad91e.png)](https://www.browserstack.com)
