@@ -1,24 +1,23 @@
 {
-    "name": "melon-colorpicker",
-    "description": "Melon Color Picker",
+    "name": "melon-split-pane",
+    "description": "Melon Split Pane",
     "main": [
         "lib/index.js",
         "lib/index.styl"
     ],
     "authors": [
-        "jingyuanZhang <zhangjingyuan1108@outlook.com>",
         "leon <ludafa@outlook.com>"
     ],
     "license": "MIT",
     "keywords": [
         "react",
         "melon",
-        "color",
-        "picker",
-        "color-picker"
+        "split-pane",
+        "split",
+        "pane"
     ],
     "moduleTypes": "umd",
-    "homepage": "https://github.com/react-melon/melon-colorpicker",
+    "homepage": "https://github.com/react-melon/melon-split-pane",
     "ignore": [
         "**/.*",
         "node_modules",
@@ -35,5 +34,5 @@
         "melon": "^0.3.4",
         "melon-core": "^0.3.2"
     },
-    "version": "1.0.4"
+    "version": "1.0.1"
 }

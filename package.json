@@ -1,6 +1,6 @@
 {
   "name": "melon-split-pane",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Split Pane Component for React",
   "main": "lib/SplitPane.js",
   "scripts": {
@@ -25,8 +25,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "melon": "^0.3.4",
-    "melon-core": "^0.3.2"
+    "melon": "^0.4.0",
+    "melon-core": "^0.4.1"
   },
   "devDependencies": {
     "babel-istanbul": "^0.11.0",
@@ -64,7 +64,9 @@
     "karma-firefox-launcher": "^1.0.0",
     "karma-jasmine": "^1.0.2",
     "nib": "^1.1.2",
-    "react-addons-test-utils": "^0.14.8",
+    "react": "^15.4.0",
+    "react-dom": "^15.4.0",
+    "react-addons-test-utils": "^15.4.0",
     "style-loader": "^0.13.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^2.3.1",
