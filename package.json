@@ -1,6 +1,6 @@
 {
   "name": "melon-split-pane",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Split Pane Component for React",
   "main": "lib/SplitPane.js",
   "scripts": {

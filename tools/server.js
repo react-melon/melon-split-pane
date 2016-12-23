@@ -3,8 +3,6 @@
  * @author ludafa <ludafa@outlook.com>
  */
 
-const path = require('path');
-
 const webpack = require('webpack');
 const config = require('./webpack.dev.js');
 
@@ -27,4 +25,4 @@ const server = new WebpackDevServer(compiler, {
     }
 });
 
-server.listen(8080);
+server.listen(process.env.PORT || 8080);

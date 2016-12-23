@@ -136,8 +136,7 @@ export default class Spliter extends Component {
 
         const {
             direction,
-            children,
-            ...rest
+            children
         } = this.props;
 
         const className = cx(this.props)
@@ -147,7 +146,6 @@ export default class Spliter extends Component {
 
         return (
             <div
-                {...rest}
                 className={className}
                 onMouseDown={this.onMouseDown}>
                 {children}
@@ -158,6 +156,7 @@ export default class Spliter extends Component {
 }
 
 Spliter.propTypes = {
+    direction: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
     onResize: PropTypes.func.isRequired,
     onResizeStart: PropTypes.func.isRequired,
     onResizeEnd: PropTypes.func.isRequired
