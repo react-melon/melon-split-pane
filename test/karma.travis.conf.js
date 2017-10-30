@@ -12,28 +12,15 @@ module.exports = function (config) {
             {},
             karmaConfig,
             {
-
-                browserStack: {
-                    username: 'leonlu2',
-                    accessKey: 'ps6dvCJdxhJGWWSTrWM4'
-                },
-
-                /* eslint-disable fecs-camelcase */
-                // define browsers
                 customLaunchers: {
-                    bs_chrome_mac: {
-                        base: 'BrowserStack',
-                        browser: 'chrome',
-                        browser_version: '52.0',
-                        os: 'OS X',
-                        os_version: 'El Capitan'
+                    ChromeTravis: {
+                        base: 'Chrome',
+                        flags: ['--no-sandbox']
                     }
                 },
-                /* eslint-enable fecs-camelcase */
-
-                browsers: [
-                    'bs_chrome_mac'
-                ]
+                browsers: ['ChromeTravis'],
+                reporters: ['coverage', 'mocha', 'dots'],
+                singleRun: true
             }
         )
     );

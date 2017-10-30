@@ -1,61 +1,74 @@
 /**
  * @file karma test common config
- * @author ludafa <ludafa@outlook.com>
+ * @author cxtom <cxtom2008@gmail.com>
  */
 
 const path = require('path');
-const babelOptions = require('../package.json').babel;
-const istanbul = require('babel-istanbul');
 
 module.exports = {
 
     basePath: path.join(__dirname, '../'),
 
-    frameworks: ['jasmine', 'browserify'],
+    frameworks: ['jasmine'],
 
     files: [
-        'test/spec/**/*.spec.js'
+        './test/index.js'
     ],
 
-    browsers: [
-        'Chrome',
-        'Firefox'
-    ],
+    browsers: ['Chrome'],
 
     preprocessors: {
-        'src/**/*.js': ['browserify', 'coverage'],
-        'test/**/*.js': ['browserify']
+        './test/**/*.js': ['webpack', 'sourcemap'],
+        './src/**/*.js': ['coverage', 'sourcemap']
     },
 
-    browserify: {
-        debug: true,
-        paths: ['./src/*.js', './test/**/**.spec.js'],
-
-        transform: [
-
-            ['babelify', babelOptions],
-
-            ['browserify-istanbul', {
-                instrumenter: istanbul,
-                instrumenterConfig: {
-                    babel: babelOptions
+    webpack: {
+        devtool: 'inline-source-map',
+        module: {
+            loaders: [
+                {
+                    test: /\.js$/,
+                    loader: 'babel',
+                    exclude: /node_modules/
+                },
+                {
+                    test: /\.json$/,
+                    loader: 'json'
+                },
+                // 处理 stylus
+                {
+                    test: /\.styl$/,
+                    loader: 'style!css!stylus?paths=node_modules&resolve url'
+                },
+                // 处理 iconfont
+                {
+                    test: /\.(svg|eot|ttf|woff|woff2)($|\?)/,
+                    loader: 'file'
+                },
+                {
+                    test: /\.css$/,
+                    loader: 'style!css'
                 }
-            }]
-        ],
-        extensions: ['.js']
+            ]
+        },
+        // stylus loader 中引入 nib 库支持
+        stylus: {
+            use: [require('nib')()]
+        }
     },
 
-    autoWatch: true,
+    webpackMiddleware: {
+        stats: 'errors-only'
+    },
 
-    // logLevel: config.LOG_DEBUG,
-    reporters: ['progress', 'coverage', 'dots'],
+    reporters: ['coverage', 'mocha'],
 
     coverageReporter: {
-        dir: path.join(__dirname, './coverage'),
+        dir: path.join(__dirname, '../../coverage'),
         reporters: [
             // reporters not supporting the `file` property
             {type: 'html'},
-            {type: 'lcov', subdir: 'lcov'}
+            {type: 'lcovonly', subdir: 'lcov'}
         ]
     },
 

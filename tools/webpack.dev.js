@@ -44,7 +44,10 @@ const config = {
     devtool: 'source-map',
     plugins: [
         new webpack.HotModuleReplacementPlugin()
-    ]
+    ],
+    devServer: {
+        port: 8080
+    }
 };
 
 

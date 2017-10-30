@@ -6,7 +6,7 @@
 import React, {Component} from 'react';
 import {findDOMNode, unmountComponentAtNode} from 'react-dom';
 import SplitPane, {Pane, Spliter} from '../../src/SplitPane.js';
-import TestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 
 describe('SplitPane', function () {
 

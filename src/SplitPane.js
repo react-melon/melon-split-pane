@@ -3,7 +3,8 @@
  * @author ludafa<ludafa@outlook.com>
  */
 
-import React, {PropTypes, Component, Children, cloneElement} from 'react';
+import React, {Component, Children, cloneElement} from 'react';
+import PropTypes from 'prop-types';
 import {findDOMNode} from 'react-dom';
 
 import {create} from 'melon-core/classname/cxBuilder';
@@ -348,6 +349,9 @@ class SplitPane extends Component {
 
         const {
             direction,
+            onResizeStart,
+            onResize,
+            onResizeEnd,
             ...rest
         } = this.props;
 
@@ -379,7 +383,7 @@ SplitPane.defaultProps = {
 };
 
 SplitPane.propTypes = {
-    onResizeRestart: PropTypes.func,
+    onResizeStart: PropTypes.func,
     onResize: PropTypes.func,
     onResizeEnd: PropTypes.func,
     direction: PropTypes.oneOf(['horizontal', 'vertical']).isRequired

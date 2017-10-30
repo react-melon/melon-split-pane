@@ -5,17 +5,13 @@
 
 const gulp = require('gulp');
 const babel = require('gulp-babel');
-const clean = require('gulp-clean');
-const babelOptions = require('./package.json').babelBuild || {};
-const babelHelpers = require('gulp-babel-external-helpers');
 
 const sourcemaps = require('gulp-sourcemaps');
 
 gulp.task('babel', function () {
     return gulp.src('src/**/*.js')
         .pipe(sourcemaps.init())
-        .pipe(babel(babelOptions))
-        .pipe(babelHelpers('babelHelpers.js', 'umd'))
+        .pipe(babel())
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('lib'));
 });
@@ -26,11 +22,6 @@ gulp.task('stylus', function () {
 
 gulp.task('build', ['babel', 'stylus']);
 
-gulp.task('clean', function () {
-    return gulp
-        .src('dist', {read: false})
-        .pipe(clean());
-});
 
 gulp.task('rebuild', ['clean', 'build']);
 
